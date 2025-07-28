@@ -1,19 +1,19 @@
 module Input (handleInputIO) where
 
-import AI
-import Board
 import Control.Concurrent
 import Control.Exception
+import Data.List (delete)
 import Debug.Trace
 import Graphics.Gloss
 import Graphics.Gloss.Interface.Pure.Game
 import System.IO.Unsafe
+import World
 
 -- functions for snapping
-coordSnap w coord = rndAdv 10 (round $ tSize w) coord
+coordSnap w = rndAdv 10 (round $ tSize w)
 
-clickSnap :: World -> (Integer, Integer) -> (Integer, Integer)
-clickSnap w (xCoord, yCoord) = (coordSnap w $ toInteger xCoord, coordSnap w $ toInteger yCoord)
+clickSnap :: World -> (Integer, Integer) -> (Float, Float)
+clickSnap w (xCoord, yCoord) = (fromIntegral $ coordSnap w $ toInteger xCoord, fromIntegral $ coordSnap w $ toInteger yCoord)
 
 rndAdv :: Int -> Integer -> Integer -> Integer
 rndAdv size target input = do
@@ -38,6 +38,25 @@ first (a, b) = a
 
 second (a, b) = b
 
+-- Function to remove an element from a list
+removeElement :: (Eq a) => a -> [a] -> [a]
+removeElement = delete
+
+-- Function to check if an element is in a list and move it between two lists
+-- If the element is in list1, it's moved to list2
+-- If the element is in list2 (and not list1), it's moved to list1
+-- Otherwise, lists remain unchanged
+moveElement :: (Eq a) => a -> [a] -> [a] -> ([a], [a])
+moveElement element list1 list2
+  | element `elem` list1 = (removeElement element list1, element : list2)
+  | element `notElem` list1 && element `elem` list2 = (element : list1, removeElement element list2)
+  | otherwise = (list1, list2)
+
+onClick :: World -> (Float, Float) -> World
+onClick w pt = do
+  let lists = moveElement pt (wSquares w) (bSquares w)
+  w {wSquares = first lists, bSquares = second lists}
+
 -- Update the world state given an input event. Some sample input events
 -- are given; when they happen, there is a trace printed on the console
 --
@@ -48,5 +67,7 @@ second (a, b) = b
 handleInputIO :: Event -> World -> IO World
 handleInputIO (EventKey (Char 's') Up _ _) w =
   trace "stepping" $ return w
-handleInputIO (EventKey (MouseButton LeftButton) Up m (x, y)) w = trace ("Click on: " ++ show (x, y) ++ "Snap to: " ++ show (clickSnap w (round x, round y))) $ return w
-handleInputIO e b = return b
+handleInputIO (EventKey (MouseButton LeftButton) Up m (x, y)) w = do
+  let snapped = clickSnap w (round x, round y)
+  trace ("Click on: " ++ show (x, y) ++ "Snap to: " ++ show snapped) $ return $ onClick w snapped
+handleInputIO e w = return w

@@ -1,10 +1,10 @@
 module Draw (drawWorld) where
 
-import Board
 import Data.Time.Clock (diffUTCTime, getCurrentTime)
 import qualified Data.Time.Clock as Clock
 import Graphics.Gloss
 import System.IO.Unsafe
+import World
 
 -- Given a world state, return a Picture which will render the world state.
 -- Currently just draws a single blue circle as a placeholder.
@@ -12,12 +12,18 @@ import System.IO.Unsafe
 -- This will need to extract the Board from the world state and draw it
 -- as a grid plus pieces.
 drawWorld :: World -> Picture
-drawWorld w = do
-  Pictures (drawGrid (tSize w) 10 [] [])
+drawWorld = drawGrid
 
-square size (x, y) = Polygon [(x + size / 2, y + size / 2), (x - size / 2, y - size / 2), (x - size / 2, y + size / 2), (x + size / 2, y - size / 2)]
+--  Pictures (drawGrid (tSize w) 10 [] [])
+
+square :: Color -> Float -> (Float, Float) -> Picture
+square colour size (x, y) = Color colour $ Polygon [(x + size / 2, y + size / 2), (x - size / 2, y + size / 2), (x - size / 2, y - size / 2), (x + size / 2, y - size / 2)]
 
 -- Old drawGrid function for drawing purely rather than with bitmap images
+
+drawGrid w = Pictures $ [square white (tSize w - 5) pt | pt <- wSquares w] ++ [square black (tSize w - 5) pt | pt <- bSquares w]
+
+{--
 
 drawGrid tSize bDims wSquares bSquares = do
   -- bs is a list of points
@@ -30,3 +36,4 @@ drawGrid tSize bDims wSquares bSquares = do
   let wPics = [translate xi yi (Color white $ circleSolid $ tSize * 0.4) | (xi, yi) <- wSquares]
   let bPics = [translate xi yi (Color black $ circleSolid $ tSize * 0.4) | (xi, yi) <- bSquares]
   [Color white $ Line locus | locus <- loci] ++ wPics ++ bPics
+--}

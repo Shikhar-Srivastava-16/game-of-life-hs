@@ -1,22 +1,12 @@
 module Main where
 
-import AI
-import Board
-import Control.Applicative
-import Control.Monad
-import Data.Aeson
-import qualified Data.ByteString.Lazy as B
-import Data.Text
-import Debug.Trace
 import Draw
-import GHC.Generics
-import Graphics.Gloss
 import Graphics.Gloss.Data.Bitmap
 import Graphics.Gloss.Interface.IO.Game
 import Input
 import Options.Applicative
-import System.Directory
-import System.Environment
+import Update
+import World
 
 -- 'play' starts up a graphics window and sets up handlers for dealing
 -- with inputs and updating the world state.
@@ -107,7 +97,7 @@ main = do
     (InWindow "Gomoku" (640, 480) (10, 10))
     (makeColor 1 0.85 0.5 1)
     10
-    initWorld -- in Board.hs
+    (initWorld 10 50) -- in Board.hs
     drawIOWorld -- in Draw.hs
     handleInputIO -- in Input.hs
     updateWorldIO -- in AI.hs
