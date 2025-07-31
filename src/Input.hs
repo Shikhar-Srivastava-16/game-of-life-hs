@@ -10,7 +10,7 @@ import Update
 import World
 
 -- functions for snapping
-coordSnap w = rndAdv 10 (round $ tSize w)
+coordSnap w = rndAdv (boardSize w) (round $ tSize w)
 
 clickSnap :: World -> (Integer, Integer) -> (Float, Float)
 clickSnap w (xCoord, yCoord) = (fromIntegral $ coordSnap w $ toInteger xCoord, fromIntegral $ coordSnap w $ toInteger yCoord)
@@ -24,15 +24,15 @@ rndAdv size target input = do
         else (-1) * rnd target (input * (-1))
     else do
       if input >= 0
-        then rnd target (input + 25) - 25
-        else (-1) * rnd target ((-input + 25) - 25)
+        then rnd target (input + (target `div` 2)) - (target `div` 2)
+        else (-1) * rnd target ((-input + (target `div` 2)) - (target `div` 2))
 
 rnd :: Integer -> Integer -> Integer
 rnd target input = do
   let temp = rem input target
   if temp < div target 2
     then input - temp
-    else input + 50 - temp
+    else input + target - temp
 
 first (a, b) = a
 
