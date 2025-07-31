@@ -2,7 +2,6 @@ module Input (handleInputIO) where
 
 import Control.Concurrent
 import Control.Exception
-import Data.List (delete)
 import Debug.Trace
 import Graphics.Gloss
 import Graphics.Gloss.Interface.Pure.Game
@@ -38,24 +37,6 @@ rnd target input = do
 first (a, b) = a
 
 second (a, b) = b
-
--- Function to remove an element from a list
-removeElement :: (Eq a) => a -> [a] -> [a]
-removeElement = delete
-
--- Function to check if an element is in a list and move it between two lists
--- If the element is in list1, it's moved to list2
--- If the element is in list2 (and not list1), it's moved to list1
--- Otherwise, lists remain unchanged
-moveElement :: (Eq a) => a -> [a] -> [a] -> ([a], [a])
-moveElement element list1 list2
-  | element `elem` list1 = (removeElement element list1, element : list2)
-  | element `notElem` list1 && element `elem` list2 = (element : list1, removeElement element list2)
-  | otherwise = (list1, list2)
-
-kill cell w = moveElement cell (bSquares w) (wSquares w)
-
-resurrect cell w = moveElement cell (wSquares w) (bSquares w)
 
 onClick :: World -> (Float, Float) -> World
 onClick w pt = do

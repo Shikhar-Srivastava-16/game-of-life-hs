@@ -47,8 +47,9 @@ switchCell pt w
 
 step :: World -> World
 step w = trace "stepping" $ do
-  let switchers = filter (\pt -> switchCell pt w) (bSquares w ++ wSquares w)
-  w
+  let wSwitchers = filter (\pt -> switchCell pt w) (wSquares w)
+  let bSwitchers = filter (\pt -> switchCell pt w) (bSquares w)
+  killAll bSwitchers w
 
 updateWorldIO :: Float -> World -> IO World
 updateWorldIO int w =
