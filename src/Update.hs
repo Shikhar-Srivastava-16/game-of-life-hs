@@ -5,7 +5,6 @@ import Debug.Trace
 import World
 
 -- Update the world state after some time has passed
-
 {--
    - Live AND (<= Underpopulation OR >=Overpopulation) => Dead
    - Dead AND == Reproduction = 2

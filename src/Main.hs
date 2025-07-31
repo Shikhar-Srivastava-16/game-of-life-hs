@@ -94,10 +94,10 @@ cliParser =
 main :: IO ()
 main = do
   playIO
-    (InWindow "Gomoku" (640, 480) (10, 10))
+    (InWindow "Gomoku" (1080, 1080) (10, 10))
     (makeColor 1 0.85 0.5 1)
     2
-    (initWorld 10 50) -- in Board.hs
+    (initWorld 20 50) -- in Board.hs
     drawIOWorld -- in Draw.hs
     handleInputIO -- in Input.hs
     updateWorldIO -- in AI.hs
