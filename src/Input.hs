@@ -7,6 +7,7 @@ import Debug.Trace
 import Graphics.Gloss
 import Graphics.Gloss.Interface.Pure.Game
 import System.IO.Unsafe
+import Update
 import World
 
 -- functions for snapping
@@ -21,11 +22,11 @@ rndAdv size target input = do
     then do
       if input >= 0
         then rnd target input
-        else (-1) * (rnd target (input * (-1)))
+        else (-1) * rnd target (input * (-1))
     else do
       if input >= 0
         then rnd target (input + 25) - 25
-        else (-1) * (rnd target ((-input + 25) - 25))
+        else (-1) * rnd target ((-input + 25) - 25)
 
 rnd :: Integer -> Integer -> Integer
 rnd target input = do
@@ -52,21 +53,24 @@ moveElement element list1 list2
   | element `notElem` list1 && element `elem` list2 = (element : list1, removeElement element list2)
   | otherwise = (list1, list2)
 
+kill cell w = moveElement cell (bSquares w) (wSquares w)
+
+resurrect cell w = moveElement cell (wSquares w) (bSquares w)
+
 onClick :: World -> (Float, Float) -> World
 onClick w pt = do
   let lists = moveElement pt (wSquares w) (bSquares w)
   w {wSquares = first lists, bSquares = second lists}
 
--- Update the world state given an input event. Some sample input events
--- are given; when they happen, there is a trace printed on the console
---
--- trace :: String -> a -> a
--- 'trace' returns its second argument while printing its first argument
--- to stderr, which can be a very useful way of debugging!
-
 handleInputIO :: Event -> World -> IO World
+handleInputIO (EventKey (Char 'p') Up _ _) w =
+  if state w == Stopped
+    then trace "changing to started" $ return $ w {state = Started}
+    else trace "changing to stopped" $ return $ w {state = Stopped}
 handleInputIO (EventKey (Char 's') Up _ _) w =
-  trace "stepping" $ return w
+  if state w == Stopped
+    then return w
+    else return $ step w
 handleInputIO (EventKey (MouseButton LeftButton) Up m (x, y)) w = do
   let snapped = clickSnap w (round x, round y)
   trace ("Click on: " ++ show (x, y) ++ "Snap to: " ++ show snapped) $ return $ onClick w snapped
