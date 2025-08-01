@@ -9,14 +9,43 @@ import World
    - Live AND (<= Underpopulation OR >=Overpopulation) => Dead
    - Dead AND == Reproduction = 2
    -}
+-- toUp (x, y) w = (x, y + tSize w)
 
-toUp (x, y) w = (x, y + tSize w)
+-- toLeft (x, y) w = (x - tSize w, y)
 
-toLeft (x, y) w = (x - tSize w, y)
+-- toRight (x, y) w = (x + tSize w, y)
 
-toRight (x, y) w = (x + tSize w, y)
+-- toDown (x, y) w = (x, y - tSize w)
 
-toDown (x, y) w = (x, y - tSize w)
+toUp (x, y) w = do 
+  let out = if y + tSize w < bound w
+      then (x, y + tSize w)
+      else do
+        let pt = (x, -(y-tSize w))
+        trace ("Up: " ++ show pt) pt
+  out
+-- toLeft (x, y) w = (x - tSize w, y)
+toLeft (x, y) w = do
+  let out = if x - tSize w > -(bound w)
+      then (x - tSize w, y)
+      else do 
+        let pt = (-(x+tSize w), y)
+        trace ("Left: " ++ show pt) pt
+  out
+toRight (x, y) w = do
+  let out = if x + tSize w < bound w
+      then (x + tSize w, y)
+      else do 
+        let pt = (-(x - tSize w), y)
+        trace ("Right: " ++ show pt) pt
+  out
+toDown (x, y) w = do 
+  let out = if y - tSize w > -(bound w)
+      then (x, y - tSize w)
+      else do 
+        let pt = (x, -(y + tSize w))   -- mayhap?
+        trace ("Down: " ++ show pt) pt
+  out
 
 -- Compound
 toUpRight pt w = toUp (toRight pt w) w
@@ -45,7 +74,7 @@ switchCell pt w
   | dead pt w = liveNeighbours (neighbours pt w) w == reproduction w
 
 step :: World -> World
-step w = trace "stepping" $ do
+step w = do
   let wSwitchers = filter (\pt -> switchCell pt w) (wSquares w)
   let bSwitchers = filter (\pt -> switchCell pt w) (bSquares w)
   killAll bSwitchers $ resurrectAll wSwitchers w

@@ -14,11 +14,7 @@ import World
 drawWorld :: World -> Picture
 drawWorld = drawGrid
 
---  Pictures (drawGrid (tSize w) 10 [] [])
-
 square :: Color -> Float -> (Float, Float) -> Picture
 square colour size (x, y) = Color colour $ Polygon [(x + size / 2, y + size / 2), (x - size / 2, y + size / 2), (x - size / 2, y - size / 2), (x + size / 2, y - size / 2)]
-
--- Old drawGrid function for drawing purely rather than with bitmap images
 
 drawGrid w = Pictures $ [square white (tSize w * 0.9) pt | pt <- wSquares w] ++ [square black (tSize w * 0.9) pt | pt <- bSquares w]

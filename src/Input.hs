@@ -52,9 +52,10 @@ handleInputIO (EventKey (Char 's') Up _ _) w =
   if state w == Started
     then return w
     else return $ step w
-handleInputIO (EventKey (MouseButton LeftButton) Up m (x, y)) w = if state w == Started
-  then return w 
-  else do
-    let snapped = clickSnap w (round x, round y)
-    trace ("Click on: " ++ show (x, y) ++ "Snap to: " ++ show snapped) $ return $ onClick w snapped
+handleInputIO (EventKey (MouseButton LeftButton) Up m (x, y)) w =
+  if state w == Started
+    then return w
+    else do
+      let snapped = clickSnap w (round x, round y)
+      return $ onClick w snapped
 handleInputIO e w = return w
