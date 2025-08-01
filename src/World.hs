@@ -1,6 +1,7 @@
 module World where
 
 import Data.List (delete)
+
 data State = Stopped | Started
   deriving (Eq, Show)
 
@@ -35,13 +36,13 @@ kill cell w = w {bSquares = bs, wSquares = ws} where (bs, ws) = moveElement cell
 
 killAll [] w = w
 killAll [cell] w = kill cell w
-killAll (cell:cells) w = killAll cells (kill cell w)
+killAll (cell : cells) w = killAll cells (kill cell w)
 
 resurrect cell w = w {bSquares = bs, wSquares = ws} where (ws, bs) = moveElement cell (wSquares w) (bSquares w)
 
 resurrectAll [] w = w
 resurrectAll [cell] w = resurrect cell w
-resurrectAll (cell:cells) w = resurrectAll cells (resurrect cell w)
+resurrectAll (cell : cells) w = resurrectAll cells (resurrect cell w)
 
 initWorld :: Float -> Float -> World
 -- initWorld bDim bTarg filePath "" =

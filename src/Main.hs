@@ -38,7 +38,7 @@ cliParser =
       ( long "bsize"
           <> short 's'
           <> metavar "<SIZE>"
-          <> value 15
+          <> value 10
           <> help "The size of the board"
       )
     <*> option
@@ -62,7 +62,7 @@ main :: IO ()
 main = do
   args <- execParser cliargs
   let tSize = argTile args
-  let dims = argSize args
+  let dims = 2 * argSize args
   (xS, yS) <- getScreenSize
   let winDim = round (dims * tSize + tSize + 10)
   playIO
