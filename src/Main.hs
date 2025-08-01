@@ -2,6 +2,7 @@ module Main where
 
 import Draw
 import Graphics.Gloss.Data.Bitmap
+import Graphics.Gloss.Interface.Environment
 import Graphics.Gloss.Interface.IO.Game
 import Input
 import Options.Applicative
@@ -24,7 +25,8 @@ import World
 -- parser library for CLI flags: https://hackage.haskell.org/package/optparse-applicative
 data CLIArgs = CLIArgs
   { argSize :: Float,
-    argSpd :: Int
+    argSpd :: Int,
+    argTile :: Float
   }
 
 cliParser :: Parser CLIArgs
@@ -47,15 +49,27 @@ cliParser =
           <> value 10
           <> help "The speed at which game loop runs, i.e the number of times the loop functions are called per second"
       )
+    <*> option
+      auto
+      ( long "tile"
+          <> short 't'
+          <> metavar "<TILESIZE>"
+          <> value 20
+          <> help "The speed at which game loop runs, i.e the number of times the loop functions are called per second"
+      )
 
 main :: IO ()
 main = do
   args <- execParser cliargs
+  let tSize = argTile args
+  let dims = argSize args
+  (xS, yS) <- getScreenSize
+  let winDim = round (dims * tSize + tSize + 10)
   playIO
-    (InWindow "Gomoku" (400, 400) (10, 10))
-    (makeColor 1 0.85 0.5 1)
+    (InWindow "Gomoku" (winDim, winDim) ((xS - winDim) `div` 2, (yS - winDim) `div` 2))
+    (makeColor 0.23 0.9 1 1)
     (argSpd args)
-    (initWorld 20 20) -- in Board.hs
+    (initWorld dims tSize) -- in Board.hs
     drawIOWorld -- in Draw.hs
     handleInputIO -- in Input.hs
     updateWorldIO -- in AI.hs
