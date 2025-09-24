@@ -22,7 +22,7 @@ toUp (x, y) w = do
         if y + tSize w <= bound w
           then (x, y + tSize w)
           else do
-            let pt = (x, -(y - tSize w))
+            let pt = (x, -y)
             trace ("Up: " ++ show pt) pt
   out
 
@@ -32,7 +32,7 @@ toLeft (x, y) w = do
         if x - tSize w >= -(bound w)
           then (x - tSize w, y)
           else do
-            let pt = (-(x + tSize w), y)
+            let pt = (-x, y)
             trace ("Left: " ++ show pt) pt
   out
 
@@ -41,7 +41,7 @@ toRight (x, y) w = do
         if x + tSize w <= bound w
           then (x + tSize w, y)
           else do
-            let pt = (-(x - tSize w), y)
+            let pt = (-x, y)
             trace ("Right: " ++ show pt) pt
   out
 
@@ -50,7 +50,7 @@ toDown (x, y) w = do
         if y - tSize w >= -(bound w)
           then (x, y - tSize w)
           else do
-            let pt = (x, -(y + tSize w)) -- mayhap?
+            let pt = (x, -y) -- mayhap?
             trace ("Down: " ++ show pt) pt
   out
 
@@ -82,8 +82,8 @@ switchCell pt w
 
 step :: World -> World
 step w = do
-  let wSwitchers = filter (\pt -> switchCell pt w) (wSquares w)
-  let bSwitchers = filter (\pt -> switchCell pt w) (bSquares w)
+  let wSwitchers = filter (`switchCell` w) (wSquares w)
+  let bSwitchers = filter (`switchCell` w) (bSquares w)
   killAll bSwitchers $ resurrectAll wSwitchers w
 
 updateWorldIO :: Float -> World -> IO World
