@@ -38,35 +38,37 @@ cliParser =
       ( long "bsize"
           <> short 's'
           <> metavar "<SIZE>"
+          -- only even values work
           <> value 10
-          <> help "The size of the board"
+          <> help "The size of the board in each direction. In theory, 0 is one central tile."
       )
     <*> option
       auto
       ( long "speed"
           <> short 'v'
           <> metavar "<FPS>"
-          <> value 10
-          <> help "The speed at which game loop runs, i.e the number of times the loop functions are called per second"
+          <> value 12
+          <> help "The speed at which game loop runs, i.e the number of times the loop functions are called per second. In this case, this flag describes the programatic frequency of new generation in hertz or 'FPS'."
       )
     <*> option
       auto
       ( long "tile"
           <> short 't'
           <> metavar "<TILESIZE>"
-          <> value 20
-          <> help "The speed at which game loop runs, i.e the number of times the loop functions are called per second"
+          -- anything works
+          <> value 15
+          <> help "The size of each tile."
       )
 
 main :: IO ()
 main = do
   args <- execParser cliargs
   let tSize = argTile args
-  let dims = 2 * argSize args
+  let dims = argSize args
   (xS, yS) <- getScreenSize
   let winDim = round (dims * tSize + tSize + 10)
   playIO
-    (InWindow "Gomoku" (winDim, winDim) ((xS - winDim) `div` 2, (yS - winDim) `div` 2))
+    (InWindow "Conway's Game of Life" (winDim, winDim) ((xS - winDim) `div` 2, (yS - winDim) `div` 2))
     (makeColor 0.23 0.9 1 1)
     (argSpd args)
     (initWorld dims tSize) -- in Board.hs
