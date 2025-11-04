@@ -1,15 +1,15 @@
 name:                game-of-life-hs
 version:             0.1.0.0
-synopsis:            Gomoku (5-in-a-row) game
+synopsis:            Conway's Game of Life
 -- description:         
 homepage:            http://studres.cs.st-andrews.ac.uk/CS2006
-author:              Edwin Brady
-maintainer:          ecb10@st-andrews.ac.uk
+author:              Shikhar Srivastava
+maintainer:          shikhars2006@gmail.com; Shikhar-Srivastava-16 @ github
 category:            Game
 build-type:          Simple
 cabal-version:       >=1.10
 
-executable gomoku
+executable gol-hs
   main-is:             Main.hs
 
   Other-modules:       World, Input, Draw, Update

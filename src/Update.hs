@@ -17,42 +17,26 @@ import World
 
 -- toDown (x, y) w = (x, y - tSize w)
 
-toUp (x, y) w = do
-  let out =
-        if y + tSize w <= bound w
-          then (x, y + tSize w)
-          else do
-            let pt = (x, -(y - tSize w))
-            trace ("Up: " ++ show pt) pt
-  out
+toUp (x, y) w =
+  if y + tSize w <= bound w
+    then (x, y + tSize w)
+    else (x, -(y - tSize w))
 
 -- toLeft (x, y) w = (x - tSize w, y)
-toLeft (x, y) w = do
-  let out =
-        if x - tSize w >= -(bound w)
-          then (x - tSize w, y)
-          else do
-            let pt = (-(x + tSize w), y)
-            trace ("Left: " ++ show pt) pt
-  out
+toLeft (x, y) w =
+  if x - tSize w >= -(bound w)
+    then (x - tSize w, y)
+    else (-(x + tSize w), y)
 
-toRight (x, y) w = do
-  let out =
-        if x + tSize w <= bound w
-          then (x + tSize w, y)
-          else do
-            let pt = (-(x - tSize w), y)
-            trace ("Right: " ++ show pt) pt
-  out
+toRight (x, y) w =
+  if x + tSize w <= bound w
+    then (x + tSize w, y)
+    else (-(x - tSize w), y)
 
-toDown (x, y) w = do
-  let out =
-        if y - tSize w >= -(bound w)
-          then (x, y - tSize w)
-          else do
-            let pt = (x, -(y + tSize w)) -- mayhap?
-            trace ("Down: " ++ show pt) pt
-  out
+toDown (x, y) w =
+  if y - tSize w >= -(bound w)
+    then (x, y - tSize w)
+    else (x, -(y + tSize w)) -- mayhap?
 
 -- Compound
 toUpRight pt w = toUp (toRight pt w) w
