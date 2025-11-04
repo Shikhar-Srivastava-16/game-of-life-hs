@@ -55,7 +55,7 @@ cliParser =
           <> short 't'
           <> metavar "<TILESIZE>"
           <> value 20
-          <> help "The speed at which game loop runs, i.e the number of times the loop functions are called per second"
+          <> help "The size of a single tile/cell"
       )
 
 main :: IO ()
@@ -78,8 +78,8 @@ main = do
       info
         (cliParser <**> helper)
         ( fullDesc
-            <> header "Starting up gomoku"
-            <> progDesc "Gomoku: Five-in-a-row, written in haskell!"
+            <> header "Starting up Conway's Game of Life"
+            <> progDesc "Conway's Game of Life, written in haskell!"
         )
 
 -- Wrappers to run these functions 'inside' the IO monad, so that we can read from and write to files
