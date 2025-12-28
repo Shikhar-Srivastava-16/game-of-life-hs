@@ -66,7 +66,7 @@ main = do
   (xS, yS) <- getScreenSize
   let winDim = round (dims * tSize + tSize + 10)
   playIO
-    (InWindow "Gomoku" (winDim, winDim) ((xS - winDim) `div` 2, (yS - winDim) `div` 2))
+    (InWindow "Conway's Game of Life" (winDim, winDim) ((xS - winDim) `div` 2, (yS - winDim) `div` 2))
     (makeColor 0.23 0.9 1 1)
     (argSpd args)
     (initWorld dims tSize) -- in Board.hs

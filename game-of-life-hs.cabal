@@ -9,7 +9,7 @@ category:            Game
 build-type:          Simple
 cabal-version:       >=1.10
 
-executable gol-hs
+executable game-of-life
   main-is:             Main.hs
 
   Other-modules:       World, Input, Draw, Update
